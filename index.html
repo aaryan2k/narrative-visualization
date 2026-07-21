@@ -1,9 +1,35 @@
 <html>
 <script src='https://d3js.org/d3.v5.min.js'></script>
 <script src="script.js"></script>
-<style> circle {stroke: black;} </style>
+<style> 
+    circle {stroke: black;} 
+    #scene1 {
+        position: absolute;
+        left: 850px;
+        top: 75px;
+    }
+    #scene2 {
+        position: absolute;
+        left: 900px;
+        top: 75px;
+    }
+    #scene3 {
+        position: absolute;
+        left: 950px;
+        top: 75px;
+    }
+    button {
+        width: 40px;
+        height: 30px;
+        margin: 0 5px;
+    }
+</style>
 <body onload='init()'>
-<svg width=1400 height=1400>
-</svg>
+    <button id="scene1" onclick="goToScene(1)">1</button>
+    <button id="scene2" onclick="goToScene(2)">2</button>
+    <button id="scene3" onclick="goToScene(3)">3</button>
+
+    <svg width=1400 height=1400>
+    </svg>
 </body>
 </html>
