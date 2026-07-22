@@ -1,7 +1,7 @@
-let currentScene = 1;
+var currentScene = 1;
 
 async function init() {
-    goToScene(2);
+    goToScene(1);
 }
 
 async function goToScene(scene) {
@@ -18,16 +18,13 @@ function drawScene(data) {
         drawAnnotation1();
     } else if (currentScene === 2) {
         drawAnnotation2();
-    } else if (currentScene === 3) {
-        console.log("Do something else entirely");
     }
 }
 
 function drawScatterplot(data) {
     var x = d3.scaleLinear().domain([0, 45]).range([400, 900]);
     var y = d3.scaleLinear().domain([0, 32]).range([600, 0]);
-    if (currentScene !== 3) {
-        d3.select("svg")
+    d3.select("svg")
             .append("g")
             .attr("transform", "translate(150, 150)")
             .selectAll("circle").data(data).enter()
@@ -38,12 +35,43 @@ function drawScatterplot(data) {
             .attr("fill", function(d) { 
                 return d.TARGET_5Yrs === '0' ? "lightcoral" : "lightblue"; 
             })
+            .style("stroke", "black");
         // d3.select("svg")
         //     .selectAll("circle")
         //     .filter(function(d) {
         //         return Number(d.GP) <= 70;
         //     })
         //     .attr("opacity", "0");
+    if (currentScene === 3) {
+        var tooltip = d3.select("#tooltip");
+        d3.select("svg")
+            .append("g")
+            .attr("transform", "translate(150, 150)")
+            .selectAll("circle").data(data).enter()
+            .append("circle")
+            .attr("cx", function(d) { return x(d.MIN); })
+            .attr("cy", function(d) { return y(d.PTS); })
+            .attr("r", "10")
+            .attr("fill", "transparent")
+            .on("mouseover", function(d) {
+                tooltip
+                    .interrupt()
+                    .style("opacity", 1)
+                    .style("left", (d3.event.pageX) + "px")
+                    .style("top", (d3.event.pageY) + "px")
+                    .html(d.Name + "<br>Points: " + d.PTS + "<br>Minutes: " + d.MIN);
+            })
+            .on("mouseout", function() {
+                tooltip
+                    .transition().duration(2000)
+                    .style("opacity", 0);
+            });
+        d3.select("svg")
+            .append("text")
+            .attr("x", 805)
+            .attr("y", 120)
+            .text("Hover over points for more info")
+            .attr("font-size", "18px");
     }
     d3.select("svg")
         .append("g")
@@ -83,13 +111,15 @@ function drawLegend() {
         .attr("cx", 1105)
         .attr("cy", 170)
         .attr("r", "7")
-        .attr("fill", "lightblue");
+        .attr("fill", "lightblue")
+        .style("stroke", "black");
     d3.select("svg")
         .append("circle")
         .attr("cx", 1105)
         .attr("cy", 200)
         .attr("r", "7")
-        .attr("fill", "lightcoral");
+        .attr("fill", "lightcoral")
+        .style("stroke", "black");
     d3.select("svg")
         .append("text")
         .attr("x", 1120)
@@ -107,6 +137,20 @@ function drawLegend() {
         .attr("y", 35)
         .text("Do Productive NBA Rookies Last Longer?")
         .attr("font-size", "30px");
+
+    if (currentScene === 3) {
+        d3.select("svg")
+            .append("text")
+            .attr("x", 1099)
+            .attr("y", 240)
+            .text("*")
+            .attr("font-size", "20px");
+        d3.select("svg")
+            .append("text")
+            .attr("x", 1120)
+            .attr("y", 235)
+            .text(" = Hall of Famer")
+    }
 }
 
 function drawAnnotation1() {

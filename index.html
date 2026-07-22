@@ -2,7 +2,6 @@
 <script src='https://d3js.org/d3.v5.min.js'></script>
 <script src="script.js"></script>
 <style> 
-    circle {stroke: black;} 
     #scene1 {
         position: absolute;
         left: 850px;
@@ -23,6 +22,15 @@
         height: 30px;
         margin: 0 5px;
     }
+    #tooltip {
+        opacity: 0;
+        position: absolute;
+        text-align: left;
+        width: 110px;
+        height: 80px;
+        background: white;
+        border: 1px solid black;
+    }
 </style>
 <body onload='init()'>
     <button id="scene1" onclick="goToScene(1)">1</button>
@@ -30,6 +38,7 @@
     <button id="scene3" onclick="goToScene(3)">3</button>
 
     <svg width=1400 height=1400>
+        <div id="tooltip"></div>
     </svg>
 </body>
 </html>
