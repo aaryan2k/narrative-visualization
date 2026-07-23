@@ -6,20 +6,32 @@
         position: absolute;
         left: 850px;
         top: 75px;
+        width: 40px;
+        height: 30px;
+        margin: 0 5px;
     }
     #scene2 {
         position: absolute;
         left: 900px;
         top: 75px;
+        width: 40px;
+        height: 30px;
+        margin: 0 5px;
     }
     #scene3 {
         position: absolute;
         left: 950px;
         top: 75px;
-    }
-    button {
         width: 40px;
         height: 30px;
+        margin: 0 5px;
+    }
+    #blue {
+        position: absolute;
+        left: 1100px;
+        top: 300px;
+        width: 75px;
+        height: 75px;
         margin: 0 5px;
     }
     #tooltip {
@@ -27,7 +39,7 @@
         position: absolute;
         text-align: left;
         width: 110px;
-        height: 80px;
+        height: 100px;
         background: white;
         border: 1px solid black;
     }
@@ -36,8 +48,9 @@
     <button id="scene1" onclick="goToScene(1)">1</button>
     <button id="scene2" onclick="goToScene(2)">2</button>
     <button id="scene3" onclick="goToScene(3)">3</button>
+    <button id="blue" onclick="toggleBlue()">Toggle Only 5+ Years</button>
 
-    <svg width=1400 height=1400>
+    <svg width=1400 height=800>
         <div id="tooltip"></div>
     </svg>
 </body>

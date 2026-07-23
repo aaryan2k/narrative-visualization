@@ -1,6 +1,8 @@
 var currentScene = 1;
+var onlyBlue = false;
 
 async function init() {
+    onlyBlue = false;
     goToScene(1);
 }
 
@@ -16,8 +18,12 @@ function drawScene(data) {
     drawLegend();
     if (currentScene === 1) {
         drawAnnotation1();
+        hideButton();
     } else if (currentScene === 2) {
         drawAnnotation2();
+        hideButton();
+    } else {
+        showButton();
     }
 }
 
@@ -25,23 +31,17 @@ function drawScatterplot(data) {
     var x = d3.scaleLinear().domain([0, 45]).range([400, 900]);
     var y = d3.scaleLinear().domain([0, 32]).range([600, 0]);
     d3.select("svg")
-            .append("g")
-            .attr("transform", "translate(150, 150)")
-            .selectAll("circle").data(data).enter()
-            .append("circle")
-            .attr("cx", function(d) { return x(d.MIN); })
-            .attr("cy", function(d) { return y(d.PTS); })
-            .attr("r", "7")
-            .attr("fill", function(d) { 
-                return d.TARGET_5Yrs === '0' ? "lightcoral" : "lightblue"; 
-            })
-            .style("stroke", "black");
-        // d3.select("svg")
-        //     .selectAll("circle")
-        //     .filter(function(d) {
-        //         return Number(d.GP) <= 70;
-        //     })
-        //     .attr("opacity", "0");
+        .append("g")
+        .attr("transform", "translate(150, 150)")
+        .selectAll("circle").data(data).enter()
+        .append("circle")
+        .attr("cx", function(d) { return x(d.MIN); })
+        .attr("cy", function(d) { return y(d.PTS); })
+        .attr("r", "7")
+        .attr("fill", function(d) { 
+            return d.TARGET_5Yrs === '0' ? "lightcoral" : "lightblue"; 
+        })
+        .style("stroke", "black");
     if (currentScene === 3) {
         var tooltip = d3.select("#tooltip");
         d3.select("svg")
@@ -57,9 +57,9 @@ function drawScatterplot(data) {
                 tooltip
                     .interrupt()
                     .style("opacity", 1)
-                    .style("left", (d3.event.pageX) + "px")
-                    .style("top", (d3.event.pageY) + "px")
-                    .html(d.Name + "<br>Points: " + d.PTS + "<br>Minutes: " + d.MIN);
+                    .style("left", (d3.event.pageX + 5) + "px")
+                    .style("top", (d3.event.pageY + 5) + "px")
+                    .html(d.Name + "<br>PPG: " + d.PTS + "<br>MPG: " + d.MIN + "<br>5+ YRs: " + numToBool(d.TARGET_5Yrs));
             })
             .on("mouseout", function() {
                 tooltip
@@ -72,7 +72,20 @@ function drawScatterplot(data) {
             .attr("y", 120)
             .text("Hover over points for more info")
             .attr("font-size", "18px");
+        if (onlyBlue) {
+            d3.select("svg")
+                .selectAll("circle")
+                .filter(function(d) {
+                    return Number(d.TARGET_5Yrs) === 0;
+                })
+                .attr("opacity", "0");
+        }
+        
     }
+    drawAxes(x, y);
+}
+
+function drawAxes(x, y) {
     d3.select("svg")
         .append("g")
         .attr("transform", "translate(550, 150)")
@@ -237,4 +250,27 @@ function drawAnnotation2() {
         .attr("y", 730)
         .text("→")
         .attr("font-size", "60px"); 
+}
+
+function numToBool(target) {
+    if (target === "0") {
+        return "No";
+    } else {
+        return "Yes";
+    }
+}
+
+function toggleBlue() {
+    onlyBlue = !onlyBlue;
+    goToScene(3);
+}
+
+function hideButton() {
+    d3.select("#blue")
+        .style("opacity", "0");
+}
+
+function showButton() {
+    d3.select("#blue")
+        .style("opacity", "1");
 }
